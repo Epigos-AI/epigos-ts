@@ -10,11 +10,10 @@ const apiKey = 'api-key'
 const MODEL_ID = 'model-id'
 const AXIOS_CONFIG = {
   baseURL: API_URL,
-  timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
     'X-Api-Key': apiKey,
-    'user-agent': `Epigos-SDK/Node; Version: ${version}`,
+    'X-Client-Sdk': `Epigos-SDK/Node; Version: ${version}`,
   },
 }
 
@@ -31,6 +30,13 @@ describe('Epigos', () => {
 
     expect(epigos.apiKey).toBe(apiKey)
     expect(epigos.baseUrl).toBe(API_URL)
+  })
+
+  it('should instantiate with custom url', () => {
+    const epigos = new Epigos({ apiKey, baseUrl: 'http://localhost' })
+
+    expect(epigos.apiKey).toBe(apiKey)
+    expect(epigos.baseUrl).toBe('http://localhost')
   })
 
   it('should error without apiKey', () => {
@@ -95,6 +101,27 @@ describe('Epigos', () => {
 
       mockedAxios.post.mockClear()
     })
+
+    it('should error on timeout error', async () => {
+      const epigos = new Epigos({ apiKey })
+
+      const errorResponse = {
+        request: {},
+      }
+      mockedAxios.request.mockRejectedValueOnce(errorResponse)
+
+      const params = {
+        ...AXIOS_CONFIG,
+        data: {},
+        method: 'post',
+      }
+
+      const results = epigos.callApi(params)
+      await expect(results).rejects.toThrowError(new EpigosError('server time out'))
+      expect(axios.request).toHaveBeenCalledWith(params)
+
+      mockedAxios.post.mockClear()
+    })
   })
 
   describe('classification()', () => {
@@ -143,7 +170,6 @@ describe('Epigos', () => {
           ...AXIOS_CONFIG,
           data: {
             image: base64,
-            confidence: null,
           },
           method: 'post',
           url: `/predict/classify/${MODEL_ID}/`,
@@ -170,7 +196,34 @@ describe('Epigos', () => {
           ...AXIOS_CONFIG,
           data: {
             image: imageUrl,
-            confidence: null,
+          },
+          method: 'post',
+          url: `/predict/classify/${MODEL_ID}/`,
+        })
+
+        expect(results).toBe(data)
+
+        mockedAxios.post.mockClear()
+      })
+
+      it('should send image with confidence payload', async () => {
+        const imageUrl = 'https://foo.bar/image.png'
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.classification(MODEL_ID)
+
+        const data = {}
+        mockedAxios.request.mockResolvedValue({ data })
+
+        const results = await model.predict({
+          imageUrl,
+          confidence: 0.7,
+        })
+        expect(axios.request).toHaveBeenCalledWith({
+          ...AXIOS_CONFIG,
+          data: {
+            image: imageUrl,
+            confidence: 0.7,
           },
           method: 'post',
           url: `/predict/classify/${MODEL_ID}/`,

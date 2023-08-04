@@ -10,9 +10,9 @@ The Epigos Node Package is a node wrapper around the core Epigos AI web applicat
 ## Installation
 
 ```bash
-  npm install @epigosai/epigos-sdk
-  # or
-  yarn add @epigosai/epigos-sdk
+npm install @epigosai/epigos-sdk
+# or
+yarn add @epigosai/epigos-sdk
 ```
 
 ## Gettting Started
@@ -25,7 +25,7 @@ API key for your workspace. Please contact our sales team for a demo.
 ```ts
 import { Epigos } from '@epigosai/epigos-sdk'
 
-const epigos = Epigos({ apiKey: 'api_key_123' })
+const epigos = new Epigos({ apiKey: 'api_key_123' })
 ```
 
 ### Prediction:
@@ -37,7 +37,7 @@ Make predictions with any of the models deployed in your workspace using the `Mo
 ```ts
 import { Epigos } from '@epigosai/epigos-sdk'
 
-const epigos = Epigos({ apiKey: 'api_key_123' })
+const epigos = new Epigos({ apiKey: 'api_key_123' })
 
 // load classification model
 model = epigos.classification('modelId')

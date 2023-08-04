@@ -1,4 +1,4 @@
-import { type AxiosRequestConfig } from 'axios'
+import { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
 export interface PredictedClass {
   category: string
@@ -29,6 +29,8 @@ export interface ErrorResponse {
   message: string
   details?: object[]
   status?: number
+  response?: AxiosResponse
+  request?: any
 }
 
 // Epigos Client

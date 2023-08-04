@@ -18,14 +18,16 @@ export class ClassificationModel implements ClassificationModelInterface {
   }
 
   async predict(payload: ClassificationPayload): Promise<ClassificationPrediction> {
-    if (!payload.imageBase64 && !payload.imageUrl) {
+    const image = payload.imageBase64 ?? payload.imageUrl
+
+    if (!image) {
       throw new Error('imageBase64 or imageUrl is required')
     }
     const url = this.buildUrl()
 
-    const data: { image: string; confidence?: number | null } = {
-      image: payload.imageBase64! || payload.imageUrl!,
-      confidence: payload.confidence || null,
+    const data: { image: string; confidence?: number | null } = { image }
+    if (payload.confidence) {
+      data.confidence = payload.confidence
     }
 
     const resp = await this.client.callApi({

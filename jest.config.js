@@ -6,7 +6,7 @@ module.exports = {
   collectCoverageFrom: ['./src/**/*.ts'],
   coverageThreshold: {
     global: {
-      lines: 97,
+      lines: 98,
     },
   },
 }

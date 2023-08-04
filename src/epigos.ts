@@ -2,21 +2,31 @@ import {
   type ClassificationModelInterface,
   type ClientInterface,
   type EpigosConfig,
-  ErrorResponse,
+  type ErrorResponse,
 } from './types'
 import { ClassificationModel } from './core'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import { API_URL } from './constants'
 import { version } from './version'
 
 export class EpigosError extends Error {
   status?: number
-  data?: object
+  data?: object[]
+  response?: AxiosResponse
+  request?: any
 
-  constructor(message: string, status?: number, data?: {}) {
+  constructor(
+    message: string,
+    status?: number,
+    data?: object[],
+    request?: any,
+    response?: AxiosResponse
+  ) {
     super(message)
     this.status = status
     this.data = data
+    this.request = request
+    this.response = response
   }
 }
 
@@ -30,7 +40,7 @@ export class Epigos implements ClientInterface {
       throw new Error('apiKey required')
     }
     this.apiKey = apiKey
-    this.baseUrl = baseUrl || API_URL
+    this.baseUrl = baseUrl ?? API_URL
   }
 
   classification(modelId: string): ClassificationModelInterface {
@@ -42,17 +52,16 @@ export class Epigos implements ClientInterface {
       const { data } = await axios.request({
         ...config,
         baseURL: this.baseUrl,
-        timeout: 1000,
         headers: {
           'Content-Type': 'application/json',
           'X-Api-Key': this.apiKey,
-          'user-agent': `Epigos-SDK/Node; Version: ${version}`,
+          'X-Client-Sdk': `Epigos-SDK/Node; Version: ${version}`,
         },
       })
-      return data?.data ?? data
+      return data
     } catch (e) {
-      const { message, status, details } = errorHandler(e as Error)
-      throw new EpigosError(message, status, details)
+      const { message, status, details, request, response } = errorHandler(e as Error)
+      throw new EpigosError(message, status, details, request, response)
     }
   }
 }
@@ -66,12 +75,14 @@ export const errorHandler = (error: Error): ErrorResponse => {
       message,
       status,
       details,
+      response,
     }
   } else if (request) {
-    //request sent but no response received
+    // request sent but no response received
     return {
       message: 'server time out',
       status: 503,
+      request,
     }
   } else {
     // Something happened in setting up the request that triggered an Error
