@@ -16,7 +16,7 @@
     "lint:fix": "eslint . --fix",
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json && tsc -p tsconfig-cjs.build.json",
     "hooks": "husky install",
-    "test": "jest \"tests/.*\\.test\\.ts\" --coverage --collectCoverageFrom=src/**/*.ts"
+    "test": "jest \"tests/.*\\.test\\.ts\" "
   },
   "keywords": [],
   "author": "Philip Adzanoukpe <philip@epigos.ai>",
