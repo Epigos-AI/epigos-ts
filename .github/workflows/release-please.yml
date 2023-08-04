@@ -36,21 +36,19 @@ jobs:
         with:
           node-version: 16
 
-      - name: Build the package
+      - name: Install dependencies
         if: ${{ steps.release.outputs.release_created }}
-        run: |
-          yarn install
-          yarn build
-
-      - name: upload assets
-        uses: softprops/action-gh-release@v1
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          tag_name: ${{ steps.release.outputs.tag_name }}
-          files: dist/*
+        run: yarn install
 
       - name: publish release
         if: ${{ steps.release.outputs.release_created }}
         run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - name: upload assets
+        uses: softprops/action-gh-release@v1
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          tag_name: ${{ steps.release.outputs.tag_name }}
+          files: dist/**/*

@@ -1,7 +1,5 @@
 # Epigos Node
 
-![Tests](https://github.com/Epigos-Inc/epigos-ts/actions/workflows/tests.yaml/badge.svg)
-
 Epigos provides an end-to-end platform to annotate data, train computer vision AI models,
 deploy them seamlessly and host the models via APIs.
 
