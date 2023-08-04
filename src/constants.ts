@@ -1,1 +1,1 @@
-export const API_URL: string = 'https://predict.epigos.ai'
+export const API_URL: string = 'https://api.epigos.ai'
