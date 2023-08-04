@@ -9,7 +9,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     env:
-      PACKAGE_NAME: '@epigos/epigos-ai'
+      PACKAGE_NAME: '@epigosai/epigos-sdk'
     steps:
       - name: release please
         uses: google-github-actions/release-please-action@v3
@@ -38,7 +38,16 @@ jobs:
 
       - name: Build the package
         if: ${{ steps.release.outputs.release_created }}
-        run: yarn install
+        run: |
+          yarn install
+          yarn build
+
+      - name: upload assets
+        uses: softprops/action-gh-release@v1
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          tag_name: ${{ steps.release.outputs.tag_name }}
+          files: dist/*
 
       - name: publish release
         if: ${{ steps.release.outputs.release_created }}

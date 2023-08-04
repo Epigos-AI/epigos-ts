@@ -1,5 +1,5 @@
 {
-  "name": "@epigos/epigos-ai",
+  "name": "@epigosai/epigos-sdk",
   "description": "Epigos Node SDK",
   "version": "1.0.0",
   "files": [
