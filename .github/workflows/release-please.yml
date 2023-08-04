@@ -45,10 +45,3 @@ jobs:
         run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-      - name: upload assets
-        uses: softprops/action-gh-release@v1
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          tag_name: ${{ steps.release.outputs.tag_name }}
-          files: dist/**/*
