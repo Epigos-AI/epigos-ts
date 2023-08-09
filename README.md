@@ -15,7 +15,7 @@ npm install @epigosai/epigos-sdk
 yarn add @epigosai/epigos-sdk
 ```
 
-## Gettting Started
+## Getting Started
 
 To make your first API call, you will need to signup at [epigos.ai](https://epigos.ai) and create an
 API key for your workspace. Please contact our sales team for a demo.
@@ -23,9 +23,9 @@ API key for your workspace. Please contact our sales team for a demo.
 ### Initialization:
 
 ```ts
-import { Epigos } from '@epigosai/epigos-sdk'
+import {Epigos} from '@epigosai/epigos-sdk'
 
-const epigos = new Epigos({ apiKey: 'api_key_123' })
+const epigos = new Epigos({apiKey: 'api_key_123'})
 ```
 
 ### Prediction:
@@ -35,15 +35,15 @@ Make predictions with any of the models deployed in your workspace using the `Mo
 #### Classification
 
 ```ts
-import { Epigos } from '@epigosai/epigos-sdk'
+import {Epigos} from '@epigosai/epigos-sdk'
 
-const epigos = new Epigos({ apiKey: 'api_key_123' })
+const epigos = new Epigos({apiKey: 'api_key_123'})
 
 // load classification model
 model = epigos.classification('modelId')
 
 // make predictions
-results = await model.predict({ imageUrl: 'path/to/your/image.jpg' })
+results = await model.predict({imageUrl: 'path/to/your/image.jpg'})
 
 console.log(results)
 ```
