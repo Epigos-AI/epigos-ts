@@ -7,7 +7,7 @@ updates:
       interval: 'weekly'
       day: 'monday'
     reviewers:
-      - 'Epigos-Inc/frontend'
+      - 'Epigos-AI/frontend'
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -15,4 +15,4 @@ updates:
       interval: 'weekly'
       day: 'monday'
     reviewers:
-      - 'Epigos-Inc/frontend'
+      - 'Epigos-AI/frontend'
