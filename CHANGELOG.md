@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Epigos-AI/epigos-ts/compare/v1.0.1...v1.1.0) (2023-10-02)
+
+
+### Features
+
+* add object detection inference ([aa73690](https://github.com/Epigos-AI/epigos-ts/commit/aa73690dc11155dc6cf7b4730a2e8c22c7b82982))
+
 ## [1.0.1](https://github.com/Epigos-Inc/epigos-ts/compare/v1.0.0...v1.0.1) (2023-08-04)
 
 
