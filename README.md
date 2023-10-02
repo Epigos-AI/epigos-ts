@@ -48,6 +48,22 @@ results = await model.predict({ imageUrl: 'path/to/your/image.jpg' })
 console.log(results)
 ```
 
+#### Object detection
+
+```ts
+import { Epigos } from '@epigosai/epigos-sdk'
+
+const epigos = new Epigos({ apiKey: 'api_key_123' })
+
+// load object detection model
+model = epigos.objectDetection('modelId')
+
+// make detections
+results = await model.detect({ imageUrl: 'path/to/your/image.jpg' })
+
+console.log(results)
+```
+
 ## Contributing
 
 If you want to extend our Python library or if you find a bug, please open a PR!

@@ -3,8 +3,9 @@ import {
   type ClientInterface,
   type EpigosConfig,
   type ErrorResponse,
+  type ObjectDetectionModelInterface,
 } from './types'
-import { ClassificationModel } from './core'
+import { ClassificationModel, ObjectDetectionModel } from './core'
 import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import { API_URL } from './constants'
 import { version } from './version'
@@ -45,6 +46,10 @@ export class Epigos implements ClientInterface {
 
   classification(modelId: string): ClassificationModelInterface {
     return new ClassificationModel(this, modelId)
+  }
+
+  objectDetection(modelId: string): ObjectDetectionModelInterface {
+    return new ObjectDetectionModel(this, modelId)
   }
 
   async callApi(config: AxiosRequestConfig): Promise<object> {

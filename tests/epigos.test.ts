@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { Epigos, EpigosError } from '../src'
-import { API_URL } from '../src/constants'
+import { ClassificationModel, Epigos, EpigosError, ObjectDetectionModel } from '../src'
+import { API_URL, DetectDefaultOptions } from '../src/constants'
 import { version } from '../src/version'
 
 jest.mock('axios')
@@ -130,6 +130,7 @@ describe('Epigos', () => {
 
       const model = epigos.classification(MODEL_ID)
       expect(model).toBeDefined()
+      expect(model).toBeInstanceOf(ClassificationModel)
     })
 
     it('should instantiate model properly', () => {
@@ -227,6 +228,155 @@ describe('Epigos', () => {
           },
           method: 'post',
           url: `/predict/classify/${MODEL_ID}/`,
+        })
+
+        expect(results).toBe(data)
+
+        mockedAxios.post.mockClear()
+      })
+    })
+  })
+
+  describe('objectDetection()', () => {
+    it('should be defined', () => {
+      const epigos = new Epigos({ apiKey })
+
+      const model = epigos.objectDetection(MODEL_ID)
+      expect(model).toBeDefined()
+      expect(model).toBeInstanceOf(ObjectDetectionModel)
+    })
+
+    it('should instantiate model properly', () => {
+      const epigos = new Epigos({ apiKey })
+
+      const model = epigos.objectDetection(MODEL_ID)
+
+      expect(model.modelId).toBe(MODEL_ID)
+    })
+    it('should error without modelId', () => {
+      const epigos = new Epigos({ apiKey })
+
+      expect(() => epigos.objectDetection('')).toThrowError('modelId is required')
+    })
+
+    describe('detect()', () => {
+      it('should error without image', async () => {
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.objectDetection(MODEL_ID)
+        const results = model.detect({})
+        await expect(results).rejects.toThrowError('imageBase64 or imageUrl is required')
+      })
+
+      it('should send imageBase64 payload', async () => {
+        const base64 = 'base64'
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.objectDetection(MODEL_ID)
+
+        const data = { image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgA', detections: [] }
+        mockedAxios.request.mockResolvedValue({ data })
+
+        const results = await model.detect({
+          imageBase64: base64,
+        })
+        expect(axios.request).toHaveBeenCalledWith({
+          ...AXIOS_CONFIG,
+          data: {
+            image: base64,
+            ...DetectDefaultOptions,
+          },
+          method: 'post',
+          url: `/predict/detect/${MODEL_ID}/`,
+        })
+
+        expect(results).toBe(data)
+
+        mockedAxios.post.mockClear()
+      })
+
+      it('should send imageUrl payload', async () => {
+        const imageUrl = 'https://foo.bar/image.png'
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.objectDetection(MODEL_ID)
+
+        const data = { image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgA', detections: [] }
+        mockedAxios.request.mockResolvedValue({ data })
+
+        const results = await model.detect({
+          imageUrl,
+        })
+        expect(axios.request).toHaveBeenCalledWith({
+          ...AXIOS_CONFIG,
+          data: {
+            image: imageUrl,
+            ...DetectDefaultOptions,
+          },
+          method: 'post',
+          url: `/predict/detect/${MODEL_ID}/`,
+        })
+
+        expect(results).toBe(data)
+
+        mockedAxios.post.mockClear()
+      })
+
+      it('should send image with confidence payload', async () => {
+        const imageUrl = 'https://foo.bar/image.png'
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.objectDetection(MODEL_ID)
+
+        const data = { image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgA', detections: [] }
+        mockedAxios.request.mockResolvedValue({ data })
+
+        const results = await model.detect({
+          imageUrl,
+          confidence: 0.7,
+        })
+        expect(axios.request).toHaveBeenCalledWith({
+          ...AXIOS_CONFIG,
+          data: {
+            confidence: 0.7,
+            image: imageUrl,
+            ...DetectDefaultOptions,
+          },
+          method: 'post',
+          url: `/predict/detect/${MODEL_ID}/`,
+        })
+
+        expect(results).toBe(data)
+
+        mockedAxios.post.mockClear()
+      })
+
+      it('should send image with custom options', async () => {
+        const imageUrl = 'https://foo.bar/image.png'
+        const epigos = new Epigos({ apiKey })
+
+        const model = epigos.objectDetection(MODEL_ID)
+
+        const data = { image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgA', detections: [] }
+        mockedAxios.request.mockResolvedValue({ data })
+
+        const options = {
+          annotate: true,
+          showProb: false,
+          strokeWidth: 5,
+        }
+        const results = await model.detect({
+          imageUrl,
+          options,
+        })
+        expect(axios.request).toHaveBeenCalledWith({
+          ...AXIOS_CONFIG,
+          data: {
+            image: imageUrl,
+            ...options,
+          },
+          method: 'post',
+          url: `/predict/detect/${MODEL_ID}/`,
         })
 
         expect(results).toBe(data)
