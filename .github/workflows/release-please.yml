@@ -16,7 +16,7 @@ jobs:
         id: release
 
       - name: fetch code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         if: ${{ steps.release.outputs.release_created }}
 
       - uses: actions/setup-node@v4
