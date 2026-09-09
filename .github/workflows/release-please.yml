@@ -12,7 +12,7 @@ jobs:
       PACKAGE_NAME: '@epigosai/epigos-sdk'
     steps:
       - name: release please
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         id: release
 
       - name: fetch code
